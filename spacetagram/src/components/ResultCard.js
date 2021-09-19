@@ -1,48 +1,33 @@
 import React, { useState } from "react";
-import { Card} from "react-bootstrap";
-import { AiFillRocket } from "react-icons/ai";
+import { Card, ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 const Resultcard = (props) => {
+
+  const [liked, setLiked] = useState(false);
   return (
     <>
-      <Card style={{ width: "18rem" }}>
-          <Card.Img variant="top" src={props.img} />
-          <Card.Body>
-            <Card.Title
-              style={{ color: "black", height: "75px", overflow: "hidden" }}
-            >
-              {props.name}
-            </Card.Title>
-            <Card.Text style={{}}>
-              <li
-                style={{
-                  listStyleType: "none",
-                  fontSize: "30px",
-                  color: "black",
-                }}
-              >
-                {props.price}
-              </li>
-              <li
-                style={{
-                  listStyleType: "none",
-                  fontSize: "20px",
-                  color: "green",
-                }}
-              >
-                {props.organic === 1 ? "Organic" : ""}
-              </li>
-              <li
-                style={{
-                  listStyleType: "none",
-                  fontSize: "20px",
-                  color: "green",
-                }}
-              >
-                {props.sale === 1 ? "On Sale!" : ""}
-              </li>
-            </Card.Text>
-          </Card.Body>
-
+      <Card>
+        <Card.Img
+          style={{
+            objectFit: "scale-down",
+            height: "50vh",
+          }}
+          variant="top"
+          src={props.img}
+          className="justify-content-md-center"
+        />
+        <Card.Body>
+        <Button></Button>
+          <Card.Title>
+            {props.title} {props.id}
+          </Card.Title>
+          <Card.Text>{props.explanation}</Card.Text>
+        </Card.Body>
+        {props.copyright && (
+          <ListGroup className="list-group-flush">
+            <ListGroupItem>{props.copyright}</ListGroupItem>
+          </ListGroup>
+        )}
       </Card>
     </>
   );
