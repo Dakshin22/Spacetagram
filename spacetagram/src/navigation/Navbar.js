@@ -6,7 +6,7 @@ import { AiFillRocket } from 'react-icons/ai';
 const NavBar = () => {
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark" sticky="top">
         <Container>
           <Navbar.Brand href="#home">
             Spacetagram

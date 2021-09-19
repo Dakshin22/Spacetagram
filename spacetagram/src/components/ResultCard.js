@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Card, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 const Resultcard = (props) => {
-
   const [liked, setLiked] = useState(false);
   return (
     <>
@@ -17,9 +16,9 @@ const Resultcard = (props) => {
           className="justify-content-md-center"
         />
         <Card.Body>
-        <Button></Button>
+          <Button variant="primary" onClick={()=>{setLiked((prevState=>!prevState))}}>{liked ? "Unlike" : "Like"}</Button>
           <Card.Title>
-            {props.title} {props.id}
+            {props.title} {liked ? <AiFillHeart/>: <AiOutlineHeart/>}
           </Card.Title>
           <Card.Text>{props.explanation}</Card.Text>
         </Card.Body>
