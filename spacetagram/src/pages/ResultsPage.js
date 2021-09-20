@@ -19,16 +19,17 @@ import NotFoundPage from "./NotFoundPage";
 const ResultsPage = (props) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+  const [dates, setDates] = useState(["2011-01-09", "2011-02-09"])
   useEffect(() => {
     getApods();
-  }, []);
+  }, [dates]);
 
   const getApods = async () => {
     setLoading(true);
     const API_KEY = process.env.REACT_APP_API_KEY;
-    let startDateURL = "start_date=2011-01-09&";
-    let endDateURL = "end_date=2011-02-09&";
+    let startDateURL = `start_date=${dates[0]}&`;
+    let endDateURL = `end_date=${dates[1]}&`;
     let countURL = "";
     let dateURL = "";
     let thumbURL = "thumbs=true&";
@@ -38,67 +39,107 @@ const ResultsPage = (props) => {
       const response = await axios.get(url);
       setResults(response.data);
     } catch (error) {
-      setError(true);
+      console.log(error)
+      setError(error.response.status);
     }
     setLoading(false);
   };
 
   return (
     <>
-      {!error ? (
-        <Tabs defaultActiveKey="photos" className="mb-3">
-          <Tab eventKey="photos" title="Photos">
-            <div
-              style={{
-                height: window.innerHeight * 0.878,
-                overflow: "scroll",
+      <Container fluid>
+        <Row>
+          <Col md={2}>
+            <Formik
+              initialValues={{
+                startDate: "2011-01-09",
+                endDate: "2011-02-09",
+              }}
+              validationSchema={Yup.object().shape({
+                startDate: Yup.date(),
+                endDate: Yup.date().min(
+                  Yup.ref("startDate"),
+                  "end date can't be before start date"
+                ),
+              })}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                  setDates([values.startDate, values.endDate])
               }}
             >
-              {!loading ? (
-                <Container fluid>
-                  <Row xs={1} md={3} className="g-4">
-                    {results ? (
-                      results.map((result, index) => (
-                        <Col>
-                          <Resultcard
-                            key={index}
-                            copyright={result.copyright}
-                            img={result.url}
-                            title={result.title}
-                            explanation={result.explanation}
-                            date = {result.date}
-                            id={uid(result)}
-                          />
-                        </Col>
-                      ))
-                    ) : (
-                      <p>No Results</p>
-                    )}
-                  </Row>
-                </Container>
-              ) : (
-                <div
-                  style={{
-                    "display": "flex",
-                    "justify-content": "center",
-                    "align-items": "center",
-                    "height": "inherit",
-                  }}
-                >
-                  <Spinner animation="grow" />
-                </div>
+              {(props) => (
+                <Form onSubmit={props.handleSubmit}>
+                  <Form.Control
+                    type="date"
+                    name="startDate"
+                    value={props.values.startDate}
+                    onChange={(e) =>
+                      props.setFieldValue("startDate", e.target.value)
+                    }
+                  />
+                  <Form.Control
+                    type="date"
+                    name="endDate"
+                    value={props.values.endDate}
+                    onChange={(e) =>
+                      props.setFieldValue("startDate", e.target.value)
+                    }
+                  />
+                  <Button variant="primary" type="submit">
+                    Filter
+                  </Button>
+                </Form>
               )}
-            </div>
-          </Tab>
-          <Tab
-            eventKey="likedPhotos"
-            title="Your Liked Photos"
-            disabled={loading}
-          ></Tab>
-        </Tabs>
-      ) : (
-        <NotFoundPage />
-      )}
+            </Formik>
+          </Col>
+          <Col md={10}>
+            {!error ? (
+                  <div
+                    style={{
+                      height: window.innerHeight * 0.878,
+                      overflow: "scroll",
+                    }}
+                  >
+                    {!loading ? (
+                      <Container fluid>
+                        <Row xs={1} md={3} className="g-4">
+                          {results ? (
+                            results.map((result, index) => (
+                              <Col>
+                                <Resultcard
+                                  key={index}
+                                  copyright={result.copyright}
+                                  img={result.url}
+                                  title={result.title}
+                                  explanation={result.explanation}
+                                  date={result.date}
+                                  id={uid(result)}
+                                />
+                              </Col>
+                            ))
+                          ) : (
+                            <p>No Results</p>
+                          )}
+                        </Row>
+                      </Container>
+                    ) : (
+                      <div
+                        style={{
+                          display: "flex",
+                          "justify-content": "center",
+                          "align-items": "center",
+                          height: "inherit",
+                        }}
+                      >
+                        <Spinner animation="grow" />
+                      </div>
+                    )}
+                  </div>
+            ) : (
+              <NotFoundPage status={error} />
+            )}
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };
