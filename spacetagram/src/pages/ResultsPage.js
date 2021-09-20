@@ -29,7 +29,7 @@ const ResultsPage = (props) => {
     const API_KEY = process.env.REACT_APP_API_KEY;
     let startDateURL = `start_date=${dates[0]}&`;
     let endDateURL = `end_date=${dates[1]}&`;
-    let thumbURL = "thumbs=true&";
+    let thumbURL = "";
     const url = `https://api.nasa.gov/planetary/apod?${startDateURL}${endDateURL}${thumbURL}api_key=${API_KEY}`;
 
     try {
@@ -37,6 +37,7 @@ const ResultsPage = (props) => {
       setResults(response.data);
     } catch (error) {
       console.log(error);
+      setLoading(false);
       setError(error.response.status);
     }
     setLoading(false);
@@ -61,6 +62,8 @@ const ResultsPage = (props) => {
               })}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 setDates([values.startDate, values.endDate]);
+                setError("");
+                setSubmitting(false);
               }}
             >
               {(props) => (
@@ -78,7 +81,7 @@ const ResultsPage = (props) => {
                       props.setFieldValue("startDate", e.target.value)
                     }
                     isInvalid={props.errors.startDate}
-                    helperText="{touched.email ? errors.email :"
+                    disabled = {loading ? true: false}
                   />
                   <Form.Label>End Date</Form.Label>
                   <Form.Control
@@ -89,22 +92,17 @@ const ResultsPage = (props) => {
                       props.setFieldValue("endDate", e.target.value)
                     }
                     isInvalid={props.errors.endDate}
+                    disabled = {loading ? true: false}
                   />
-                  <OverlayTrigger
-                    key={"bottom"}
-                    placement={"bottom"}
-                    overlay={
-                      <Tooltip>Click to get photos!</Tooltip>
-                    }
-                  >
+
                     <Button
                       variant="primary"
                       type="submit"
                       style={{ margin: 10 }}
+                      disabled = {loading ? true: false}
                     >
-                      Get Photos Between These Dates!
+                      {!loading ? "Get Photos Between These Dates!" : "Getting Photos..."}
                     </Button>
-                  </OverlayTrigger>
                 </Form>
               )}
             </Formik>
@@ -122,9 +120,8 @@ const ResultsPage = (props) => {
                     <Row xs={1} md={3} className="g-4">
                       {results ? (
                         results.map((result, index) => (
-                          <Col>
+                          <Col key={index}>
                             <Resultcard
-                              key={index}
                               copyright={result.copyright}
                               img={result.url}
                               title={result.title}
@@ -143,12 +140,12 @@ const ResultsPage = (props) => {
                   <div
                     style={{
                       display: "flex",
-                      "justify-content": "center",
-                      "align-items": "center",
+                      "justifyContent": "center",
+                      "alignItems": "center",
                       height: "inherit",
                     }}
                   >
-                    <Spinner animation="grow" />
+                    <Spinner animation="border" />
                   </div>
                 )}
               </div>

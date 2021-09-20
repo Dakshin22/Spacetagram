@@ -26,6 +26,7 @@ const Resultcard = (props) => {
           variant="top"
           src={props.img}
           className="justify-content-md-center"
+          alt ={ `Photo of ${props.title}`}
         />
         <Card.Body className="text-center">
             <Button variant={liked ? "success": "outline-dark"} onClick={onLikeOrUnlike}>
