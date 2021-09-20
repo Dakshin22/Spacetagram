@@ -7,7 +7,7 @@ import {
   EmailShareButton,
   EmailIcon,
   LinkedinShareButton,
-  LinkedinIcon
+  LinkedinIcon,
 } from "react-share";
 const Resultcard = (props) => {
   const [liked, setLiked] = useState(false);
@@ -27,49 +27,48 @@ const Resultcard = (props) => {
           src={props.img}
           className="justify-content-md-center"
         />
+        <Card.Body className="text-center">
+            <Button variant={liked ? "success": "outline-dark"} onClick={onLikeOrUnlike}>
+              {liked ? "I like this!" : "Like"}
+            </Button>
+        </Card.Body>
         <Card.Body>
-          <Button variant="primary" onClick={onLikeOrUnlike}>
-            {liked ? "Unlike" : "Like"}
-          </Button>
-
           <Card.Title>
-            {props.title} {props.date}{" "}
+            {props.title}{" "}
             {liked ? <AiFillHeart /> : <AiOutlineHeart />}
           </Card.Title>
 
           <Card.Text>{props.explanation}</Card.Text>
         </Card.Body>
-          <ListGroup className="list-group-flush">
-            {props.copyright && (<ListGroupItem>{props.copyright}</ListGroupItem>)}
-            <ListGroup.Item>
-              <PinterestShareButton
-                url={props.img}
-                media={props.img}
-                description={props.title}
-              >
-                <PinterestIcon size={32} round />
-              </PinterestShareButton>
-              {" "}
-              <LinkedinShareButton
-                url={props.img}
-                title={`Photo of ${props.title}`}
-                summary = {`Read about the ${props.title} ${props.description}`}
-              >
-                <LinkedinIcon size={32} round />
-              </LinkedinShareButton>
-              {" "}
-              <EmailShareButton
-                url={props.img}
-                subject={"Check out this cool space photo!"}
-                body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
-                seperator={":\n"}
-              >
-                <EmailIcon size={32} round />
-              </EmailShareButton>
-              {" "}
-            </ListGroup.Item>
-          </ListGroup>
-        
+        <ListGroup className="list-group-flush">
+          {props.copyright && <ListGroupItem>{props.copyright}</ListGroupItem>}
+          <ListGroupItem>Date: {props.date}</ListGroupItem>
+        </ListGroup>
+
+        <Card.Footer className="text-center">
+            <PinterestShareButton
+              url={props.img}
+              media={props.img}
+              description={props.title}
+            >
+              <PinterestIcon size={32} round />
+            </PinterestShareButton>{" "}
+            <LinkedinShareButton
+              url={props.img}
+              title={`Photo of ${props.title}`}
+              summary={`Read about the ${props.title} ${props.description}`}
+            >
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>{" "}
+            <EmailShareButton
+              url={props.img}
+              subject={"Check out this cool space photo!"}
+              body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
+              seperator={":\n"}
+            >
+              <EmailIcon size={32} round />
+            </EmailShareButton>{" "}
+            </Card.Footer>
       </Card>
     </>
   );
