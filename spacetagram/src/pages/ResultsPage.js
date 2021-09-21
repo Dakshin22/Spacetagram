@@ -6,22 +6,42 @@ import * as Yup from "yup";
 import axios from "axios";
 import NotFoundPage from "./NotFoundPage";
 import { parse, isDate } from "date-fns";
+
+/**
+ * 
+ * @param {*} props 
+ * Component that renders main results page.
+ * Contains form to set start and end dates
+ * and results section.
+ */
 const ResultsPage = (props) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  // Default start and end dates to show results upon initial page load.
   const [dates, setDates] = useState(["2021-07-01", "2021-08-01"]);
   useEffect(() => {
     getApods();
   }, [dates]);
+
   let today = new Date();
+  /**
+   *
+   * @param {*} value
+   * @param {*} originalValue
+   * @returns date that is converted from string to a Date class object.
+   */
   function parseDateString(value, originalValue) {
     const parsedDate = isDate(originalValue)
       ? originalValue
       : parse(originalValue, "yyyy-MM-dd", new Date());
-  
+
     return parsedDate;
   }
+  /**
+   * Sets results state according to parameters set by dates state by calling the APOD API.
+   * Sends Error info to `NotFoundPage` if HTTP request returns error.
+   */
   const getApods = async () => {
     setLoading(true);
     const API_KEY = process.env.REACT_APP_API_KEY;
@@ -50,15 +70,19 @@ const ResultsPage = (props) => {
                 startDate: "2021-07-01",
                 endDate: "2021-08-01",
               }}
+              //sets minimum possible value of date according to NASA API.
               validationSchema={Yup.object().shape({
                 startDate: Yup.date().min("1995-06-16").required(),
                 endDate: Yup.date()
                   .min(
                     Yup.ref("startDate"),
                     "end date can't be before start date"
-                  ).transform(parseDateString).max(today)
+                  )
+                  .transform(parseDateString)
+                  .max(today)
                   .required(),
               })}
+              //resets date, error, and submitting state upon submission.
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 setDates([values.startDate, values.endDate]);
                 setError("");
@@ -87,7 +111,7 @@ const ResultsPage = (props) => {
                       Start date must be on or after 1995-06-16
                     </Form.Text>
                   )}
-                  <br/>
+                  <br />
                   <Form.Label>End Date</Form.Label>
                   <Form.Control
                     type="date"
@@ -132,15 +156,19 @@ const ResultsPage = (props) => {
                     <Row xs={1} md={3} className="g-4">
                       {results ? (
                         results.map((result, index) => (
-                          (<Col key={index}>
+                          <Col key={index}>
                             <Resultcard
                               copyright={result.copyright}
-                              img={result.thumbnail_url ? result.thumbnail_url : result.url}
+                              img={
+                                result.thumbnail_url
+                                  ? result.thumbnail_url
+                                  : result.url
+                              }
                               title={result.title}
                               explanation={result.explanation}
                               date={result.date}
                             />
-                          </Col>)
+                          </Col>
                         ))
                       ) : (
                         <p>No Results</p>

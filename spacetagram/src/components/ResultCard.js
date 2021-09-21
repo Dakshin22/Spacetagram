@@ -9,9 +9,18 @@ import {
   LinkedinShareButton,
   LinkedinIcon,
 } from "react-share";
+/**
+ * Component to show individual photos.
+ * Contains Share buttons to various social networking sites,
+ * Like button, title, description, date, and of course,
+ * the photo itself. 
+ * Information from API comes by way of props.
+ */
 const Resultcard = (props) => {
   const [liked, setLiked] = useState(false);
-
+  /**
+   * Alternates liked state when user clicks like button.
+   */
   const onLikeOrUnlike = () => {
     setLiked((prevState) => !prevState);
   };
