@@ -10,7 +10,7 @@ const ResultsPage = (props) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [dates, setDates] = useState(["2011-01-09", "2011-02-09"]);
+  const [dates, setDates] = useState(["2021-07-01", "2021-08-01"]);
   useEffect(() => {
     getApods();
   }, [dates]);
@@ -47,8 +47,8 @@ const ResultsPage = (props) => {
           <Col md={2} style={{ marginTop: "1em" }}>
             <Formik
               initialValues={{
-                startDate: "2011-01-09",
-                endDate: "2011-02-09",
+                startDate: "2021-07-01",
+                endDate: "2021-08-01",
               }}
               validationSchema={Yup.object().shape({
                 startDate: Yup.date().min("1995-06-16").required(),
@@ -132,15 +132,15 @@ const ResultsPage = (props) => {
                     <Row xs={1} md={3} className="g-4">
                       {results ? (
                         results.map((result, index) => (
-                          <Col key={index}>
+                          (<Col key={index}>
                             <Resultcard
                               copyright={result.copyright}
-                              img={result.url}
+                              img={result.thumbnail_url ? result.thumbnail_url : result.url}
                               title={result.title}
                               explanation={result.explanation}
                               date={result.date}
                             />
-                          </Col>
+                          </Col>)
                         ))
                       ) : (
                         <p>No Results</p>
