@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import NotFoundPage from "./NotFoundPage";
+import { parse, isDate } from "date-fns";
 const ResultsPage = (props) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,14 @@ const ResultsPage = (props) => {
   useEffect(() => {
     getApods();
   }, [dates]);
-
+  let today = new Date();
+  function parseDateString(value, originalValue) {
+    const parsedDate = isDate(originalValue)
+      ? originalValue
+      : parse(originalValue, "yyyy-MM-dd", new Date());
+  
+    return parsedDate;
+  }
   const getApods = async () => {
     setLoading(true);
     const API_KEY = process.env.REACT_APP_API_KEY;
@@ -43,12 +51,12 @@ const ResultsPage = (props) => {
                 endDate: "2011-02-09",
               }}
               validationSchema={Yup.object().shape({
-                startDate: Yup.date().required(),
+                startDate: Yup.date().min("1995-06-16").required(),
                 endDate: Yup.date()
                   .min(
                     Yup.ref("startDate"),
                     "end date can't be before start date"
-                  )
+                  ).transform(parseDateString).max(today)
                   .required(),
               })}
               onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -60,7 +68,7 @@ const ResultsPage = (props) => {
               {(props) => (
                 <Form onSubmit={props.handleSubmit}>
                   <Form.Label>
-                    Welcome to Spacetagram! Browse photos form the NASA API
+                    Welcome to Spacetagram! Browse photos from the NASA API
                     using the dates below!
                   </Form.Label>
                   <Form.Label>Start Date</Form.Label>
@@ -74,7 +82,12 @@ const ResultsPage = (props) => {
                     isInvalid={props.errors.startDate}
                     disabled={loading ? true : false}
                   />
-
+                  {props.errors.startDate && (
+                    <Form.Text style={{ color: "red" }}>
+                      Start date must be on or after 1995-06-16
+                    </Form.Text>
+                  )}
+                  <br/>
                   <Form.Label>End Date</Form.Label>
                   <Form.Control
                     type="date"
@@ -88,7 +101,8 @@ const ResultsPage = (props) => {
                   />
                   {props.errors.endDate && (
                     <Form.Text style={{ color: "red" }}>
-                      End date must be on or later than start date.
+                      End date must be on or later than start date. End date
+                      cannot be later than today.
                     </Form.Text>
                   )}
                   <Button
