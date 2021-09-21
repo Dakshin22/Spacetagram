@@ -9,39 +9,48 @@ import {
   LinkedinShareButton,
   LinkedinIcon,
 } from "react-share";
+/**
+ * Component to show individual photos.
+ * Contains Share buttons to various social networking sites,
+ * Like button, title, description, date, and of course,
+ * the photo itself. 
+ * Information from API comes by way of props.
+ */
 const Resultcard = (props) => {
   const [liked, setLiked] = useState(false);
-
+  /**
+   * Alternates liked state when user clicks like button.
+   */
   const onLikeOrUnlike = () => {
     setLiked((prevState) => !prevState);
   };
   return (
     <>
       <Card>
-      <Card.Header className="text-center">
-            <PinterestShareButton
-              url={props.img}
-              media={props.img}
-              description={props.title}
-            >
-              <PinterestIcon size={32} round />
-            </PinterestShareButton>{" "}
-            <LinkedinShareButton
-              url={props.img}
-              title={`Photo of ${props.title}`}
-              summary={`Read about the ${props.title} ${props.description}`}
-            >
-              <LinkedinIcon size={32} round />
-            </LinkedinShareButton>{" "}
-            <EmailShareButton
-              url={props.img}
-              subject={"Check out this cool space photo!"}
-              body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
-              seperator={":\n"}
-            >
-              <EmailIcon size={32} round />
-            </EmailShareButton>{" "}
-            </Card.Header>
+        <Card.Header className="text-center">
+          <PinterestShareButton
+            url={props.img}
+            media={props.img}
+            description={props.title}
+          >
+            <PinterestIcon size={32} round />
+          </PinterestShareButton>{" "}
+          <LinkedinShareButton
+            url={props.img}
+            title={`Photo of ${props.title}`}
+            summary={`Read about the ${props.title} ${props.description}`}
+          >
+            <LinkedinIcon size={32} round />
+          </LinkedinShareButton>{" "}
+          <EmailShareButton
+            url={props.img}
+            subject={"Check out this cool space photo!"}
+            body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
+            seperator={":\n"}
+          >
+            <EmailIcon size={32} round />
+          </EmailShareButton>{" "}
+        </Card.Header>
         <Card.Img
           style={{
             objectFit: "scale-down",
@@ -50,17 +59,19 @@ const Resultcard = (props) => {
           variant="top"
           src={props.img}
           className="justify-content-md-center"
-          alt ={ `Photo of ${props.title}`}
+          alt={`Photo of ${props.title}`}
         />
         <Card.Body className="text-center">
-            <Button variant={liked ? "success": "outline-dark"} onClick={onLikeOrUnlike}>
-              {liked ? "I like this!" : "Like"}
-            </Button>
+          <Button
+            variant={liked ? "success" : "outline-dark"}
+            onClick={onLikeOrUnlike}
+          >
+            {liked ? "I like this!" : "Like"}
+          </Button>
         </Card.Body>
         <Card.Body>
           <Card.Title>
-            {props.title}{" "}
-            {liked ? <AiFillHeart /> : <AiOutlineHeart />}
+            {props.title} {liked ? <AiFillHeart /> : <AiOutlineHeart />}
           </Card.Title>
 
           <Card.Text>{props.explanation}</Card.Text>
@@ -69,8 +80,6 @@ const Resultcard = (props) => {
           {props.copyright && <ListGroupItem>{props.copyright}</ListGroupItem>}
           <ListGroupItem>Date: {props.date}</ListGroupItem>
         </ListGroup>
-
-
       </Card>
     </>
   );
