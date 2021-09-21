@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Resultcard from "../components/ResultCard";
-import {
-  OverlayTrigger,
-  Tooltip,
-  Button,
-  Form,
-  Container,
-  Row,
-  Spinner,
-  Col,
-} from "react-bootstrap";
+import { Button, Form, Container, Row, Spinner, Col } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -36,7 +27,6 @@ const ResultsPage = (props) => {
       const response = await axios.get(url);
       setResults(response.data);
     } catch (error) {
-      console.log(error);
       setLoading(false);
       setError(error.response.status);
     }
@@ -45,9 +35,9 @@ const ResultsPage = (props) => {
 
   return (
     <>
-      <Container style = {{margin: '1em'}} fluid>
+      <Container style={{ marginTop: "1em" }} fluid>
         <Row>
-          <Col md={2} style = {{marginTop: '1em'}}>
+          <Col md={2} style={{ marginTop: "1em" }}>
             <Formik
               initialValues={{
                 startDate: "2011-01-09",
@@ -98,7 +88,7 @@ const ResultsPage = (props) => {
                     disabled={loading ? true : false}
                   />
                   {props.errors.endDate && (
-                    <Form.Text style = {{color: "red"}}>
+                    <Form.Text style={{ color: "red" }}>
                       End date must be on or later than start date.
                     </Form.Text>
                   )}
