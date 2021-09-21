@@ -18,6 +18,30 @@ const Resultcard = (props) => {
   return (
     <>
       <Card>
+      <Card.Header className="text-center">
+            <PinterestShareButton
+              url={props.img}
+              media={props.img}
+              description={props.title}
+            >
+              <PinterestIcon size={32} round />
+            </PinterestShareButton>{" "}
+            <LinkedinShareButton
+              url={props.img}
+              title={`Photo of ${props.title}`}
+              summary={`Read about the ${props.title} ${props.description}`}
+            >
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>{" "}
+            <EmailShareButton
+              url={props.img}
+              subject={"Check out this cool space photo!"}
+              body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
+              seperator={":\n"}
+            >
+              <EmailIcon size={32} round />
+            </EmailShareButton>{" "}
+            </Card.Header>
         <Card.Img
           style={{
             objectFit: "scale-down",
@@ -46,30 +70,7 @@ const Resultcard = (props) => {
           <ListGroupItem>Date: {props.date}</ListGroupItem>
         </ListGroup>
 
-        <Card.Footer className="text-center">
-            <PinterestShareButton
-              url={props.img}
-              media={props.img}
-              description={props.title}
-            >
-              <PinterestIcon size={32} round />
-            </PinterestShareButton>{" "}
-            <LinkedinShareButton
-              url={props.img}
-              title={`Photo of ${props.title}`}
-              summary={`Read about the ${props.title} ${props.description}`}
-            >
-              <LinkedinIcon size={32} round />
-            </LinkedinShareButton>{" "}
-            <EmailShareButton
-              url={props.img}
-              subject={"Check out this cool space photo!"}
-              body={`I just saw this photo of ${props.title} on the NASA API, let me know what you think!`}
-              seperator={":\n"}
-            >
-              <EmailIcon size={32} round />
-            </EmailShareButton>{" "}
-            </Card.Footer>
+
       </Card>
     </>
   );

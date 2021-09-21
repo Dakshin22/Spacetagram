@@ -29,7 +29,7 @@ const ResultsPage = (props) => {
     const API_KEY = process.env.REACT_APP_API_KEY;
     let startDateURL = `start_date=${dates[0]}&`;
     let endDateURL = `end_date=${dates[1]}&`;
-    let thumbURL = "";
+    let thumbURL = "thumbs=True&";
     const url = `https://api.nasa.gov/planetary/apod?${startDateURL}${endDateURL}${thumbURL}api_key=${API_KEY}`;
 
     try {
@@ -45,20 +45,22 @@ const ResultsPage = (props) => {
 
   return (
     <>
-      <Container fluid>
+      <Container style = {{margin: '1em'}} fluid>
         <Row>
-          <Col md={2}>
+          <Col md={2} style = {{marginTop: '1em'}}>
             <Formik
               initialValues={{
                 startDate: "2011-01-09",
                 endDate: "2011-02-09",
               }}
               validationSchema={Yup.object().shape({
-                startDate: Yup.date(),
-                endDate: Yup.date().min(
-                  Yup.ref("startDate"),
-                  "end date can't be before start date"
-                ),
+                startDate: Yup.date().required(),
+                endDate: Yup.date()
+                  .min(
+                    Yup.ref("startDate"),
+                    "end date can't be before start date"
+                  )
+                  .required(),
               })}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 setDates([values.startDate, values.endDate]);
@@ -70,7 +72,7 @@ const ResultsPage = (props) => {
                 <Form onSubmit={props.handleSubmit}>
                   <Form.Label>
                     Welcome to Spacetagram! Browse photos form the NASA API
-                    between the dates below!
+                    using the dates below!
                   </Form.Label>
                   <Form.Label>Start Date</Form.Label>
                   <Form.Control
@@ -81,8 +83,9 @@ const ResultsPage = (props) => {
                       props.setFieldValue("startDate", e.target.value)
                     }
                     isInvalid={props.errors.startDate}
-                    disabled = {loading ? true: false}
+                    disabled={loading ? true : false}
                   />
+
                   <Form.Label>End Date</Form.Label>
                   <Form.Control
                     type="date"
@@ -92,17 +95,23 @@ const ResultsPage = (props) => {
                       props.setFieldValue("endDate", e.target.value)
                     }
                     isInvalid={props.errors.endDate}
-                    disabled = {loading ? true: false}
+                    disabled={loading ? true : false}
                   />
-
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      style={{ margin: 10 }}
-                      disabled = {loading ? true: false}
-                    >
-                      {!loading ? "Get Photos Between These Dates!" : "Getting Photos..."}
-                    </Button>
+                  {props.errors.endDate && (
+                    <Form.Text style = {{color: "red"}}>
+                      End date must be on or later than start date.
+                    </Form.Text>
+                  )}
+                  <Button
+                    variant="dark"
+                    type="submit"
+                    style={{ margin: 10 }}
+                    disabled={loading ? true : false}
+                  >
+                    {!loading
+                      ? "Click to get Photos Between These Dates!"
+                      : "Getting Photos..."}
+                  </Button>
                 </Form>
               )}
             </Formik>
@@ -140,8 +149,8 @@ const ResultsPage = (props) => {
                   <div
                     style={{
                       display: "flex",
-                      "justifyContent": "center",
-                      "alignItems": "center",
+                      justifyContent: "center",
+                      alignItems: "center",
                       height: "inherit",
                     }}
                   >
