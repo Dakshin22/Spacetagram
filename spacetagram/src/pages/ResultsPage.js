@@ -4,7 +4,6 @@ import { Button, Form, Container, Row, Spinner, Col } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { uid } from "react-uid";
 import NotFoundPage from "./NotFoundPage";
 const ResultsPage = (props) => {
   const [results, setResults] = useState([]);
@@ -126,7 +125,6 @@ const ResultsPage = (props) => {
                               title={result.title}
                               explanation={result.explanation}
                               date={result.date}
-                              id={uid(result)}
                             />
                           </Col>
                         ))
